@@ -3,15 +3,24 @@
 //１．入力チェック(受信確認処理追加)
 //----------------------------------------------------
 //商品名 受信チェック:item
-
+if(!isset($_POST["item"]) || $_POST["item"] == ""){
+  exit("item_error");
+}
 
 //金額 受信チェック:value
-
+if(!isset($_POST["value"]) || $_POST["item"] == ""){
+  exit("value_error");
+}
 
 //商品紹介文 受信チェック:description
-
+if(!isset($_POST["description"]) || $_POST["item"] == ""){
+  exit("description_error");
+}
 
 //ファイル受信チェック※$_FILES["******"]["name"]の場合
+if(!isset($_FILES["fname"]["name"]) || $_FILES["fname"]["name"] == ""){
+  exit("item_error");
+}
 
 
 
@@ -19,10 +28,10 @@
 //----------------------------------------------------
 //２. POSTデータ取得
 //----------------------------------------------------
-$*****  = **********;   //File名
-$*****  = **********;   //商品名
-$*****  = **********;   //価格(数字：intvalを使う)
-$****** = **********;   //商品紹介文
+$fname  = $_FILES["fname"]["name"];   //File名
+$item  = $_POST["item"];   //商品名
+$value  = $_POST["value"];   //価格(数字：intvalを使う)
+$description = $_POST["description"];   //商品紹介文
 
 
 //1-2. FileUpload処理
@@ -40,7 +49,7 @@ if(move_uploaded_file($_FILES['fname']['tmp_name'], $upload.$fname)){
 //３. DB接続します(エラー処理追加)
 //----------------------------------------------------
 try {
-  $pdo = new PDO('mysql:dbname=******;charset=utf8;host=*******','*****','*****');
+  $pdo = new PDO('mysql:dbname=docker_db;charset=utf8;host=172.19.0.2','root','root');
 } catch (PDOException $e) {
   exit('DbConnectError:'.$e->getMessage());
 }
@@ -48,12 +57,12 @@ try {
 //----------------------------------------------------
 //４．データ登録SQL作成
 //----------------------------------------------------
-$stmt = $pdo->prepare("INSERT INTO *********(id, item, value, fname,
-description, indate )VALUES(NULL, :******, :*****, :*****, :******, sysdate())");
-$stmt->bindValue(':*****', $*****, PDO::PARAM_STR);
-$stmt->bindValue(':*****', $*****, PDO::PARAM_INT); //数値
-$stmt->bindValue(':*****', $*****, PDO::PARAM_STR);
-$stmt->bindValue(':*****', $*****, PDO::PARAM_STR);
+$stmt = $pdo->prepare("INSERT INTO ec_table(id, item, value, fname,
+description, indate )VALUES(NULL, :item, :value, :fname, :description, sysdate())");
+$stmt->bindValue(':item', $item, PDO::PARAM_STR);
+$stmt->bindValue(':value', $value, PDO::PARAM_INT); //数値
+$stmt->bindValue(':fname', $fname, PDO::PARAM_STR);
+$stmt->bindValue(':description', $description, PDO::PARAM_STR);
 $status = $stmt->execute();
 
 //----------------------------------------------------
@@ -65,7 +74,7 @@ if($status==false){
   exit("QueryError:".$error[2]);
 }else{
   //５．item.phpへリダイレクト
-  header("Location: *****.php");
+  header("Location: item.php");
   exit;
 }
 ?>

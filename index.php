@@ -1,12 +1,15 @@
 <?php
 session_start();
 //1.  DB接続します
-
-
+try {
+  $pdo = new PDO('mysql:dbname=docker_db;charset=utf8;host=172.19.0.2','root','root');
+} catch (PDOException $e) {
+  exit('DbConnectError:'.$e->getMessage());
+}
 
 //２．データ登録SQL作成
-
-
+$stmt = $pdo->prepare("SELECT * FROM ec_table");
+$status = $stmt->execute();
 
 //３．データ表示
 $view="";
@@ -19,10 +22,10 @@ if($status==false) {
   //Selectデータの数だけ自動でループしてくれる
   while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
     $view .= '<li class="products-item">';
-    $view .= '<a href="item.php?id='.$result["*****"].'">';
-    $view .= '<p class="pruducts-thumb"><img src="./img/'.$result["*****"].'" width="200"></p>';
-    $view .= '<h3 class="products-title">'.$result["*****"].'</h3>';
-    $view .= '<p class="products-price">'.$result["*****"].'</p>';
+    $view .= '<a href="item.php?id='.$result["id"].'">';
+    $view .= '<p class="pruducts-thumb"><img src="./img/'.$result["fname"].'" width="200"></p>';
+    $view .= '<h3 class="products-title">'.$result["item"].'</h3>';
+    $view .= '<p class="products-price">'.$result["value"].'</p>';
     $view .= '</a>';
     $view .= '</li>';
   }
@@ -117,7 +120,7 @@ if($status==false) {
 
         <!--商品リスト-->
         <ul class="products-list">
-            <?php echo $*****; ?>
+            <?php echo $view; ?>
         </ul>
         <!--end 商品リスト-->
 

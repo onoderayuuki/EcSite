@@ -2,22 +2,22 @@
 session_start();
 
 //GETでidを取得
-if(!isset($_GET["*****"]) || $_GET["*****"]==""){
+if(!isset($_GET["id"]) || $_GET["id"]==""){
   exit("ParamError!");
 }else{
-  $***** = intval($_GET["*****"]); //intval数値変換
+  $id = intval($_GET["id"]); //intval数値変換
 }
 
 //1.  DB接続します
 try {
-  $pdo = new PDO('mysql:dbname=gs_db;charset=utf8;host=localhost','root','');
+  $pdo = new PDO('mysql:dbname=docker_db;charset=utf8;host=172.19.0.2','root','root');
 } catch (PDOException $e) {
-  exit('データベースに接続できませんでした。'.$e->getMessage());
+  exit('DbConnectError:'.$e->getMessage());
 }
 
 //２．データ登録SQL作成
-$stmt = $pdo->prepare("SELECT * FROM ***** WHERE id=:*****");
-$stmt->bindValue(':*****', $*****, PDO::PARAM_INT);
+$stmt = $pdo->prepare("SELECT * FROM ec_table WHERE id=:id");
+$stmt->bindValue(':id', $id, PDO::PARAM_INT);
 $status = $stmt->execute();
 
 //３．データ表示
@@ -59,7 +59,7 @@ if($status==false) {
       <main class="wrapper-main">
 
         <!--商品情報-->
-        <p class="item-thumb"><img src="./img/<?=$row["*****"]?>" width="200"></p>
+        <p class="item-thumb"><img src="./img/<?=$row["fname"]?>" width="200"></p>
         <div class="flex-parent item-label">
           <h1 class="item-name"><?=$row["item"]?></h1>
           <p class="item-price"><?=$row["value"]?></p>
@@ -73,10 +73,10 @@ if($status==false) {
         <div class="flex-parent item-label">
           <p class="item-text"><?=$row["description"]?></p>
         </div>
-        <input type="hidden" name="item" value="<?=$row["*****"]?>">
-        <input type="hidden" name="value" value="<?=$row["*****"]?>">
-        <input type="hidden" name="id" value="<?=$row["*****"]?>">
-        <input type="hidden" name="fname" value="<?=$row["*****"]?>">
+        <input type="hidden" name="item" value="<?=$row["item"]?>">
+        <input type="hidden" name="value" value="<?=$row["value"]?>">
+        <input type="hidden" name="id" value="<?=$row["id"]?>">
+        <input type="hidden" name="fname" value="<?=$row["fname"]?>">
       </main>
     </div>
   </div>

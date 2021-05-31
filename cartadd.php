@@ -27,20 +27,25 @@ if(!isset($_POST["fname"]) || $_POST["fname"]==""){
 //----------------------------------------------------
 //２．POST値を変数に代入
 //----------------------------------------------------
-$***** = intval($_POST["id"]);
-$***** = $_POST["item"];
-$***** = intval($_POST["value"]);
-$***** = intval($_POST["num"]);
-$***** = $_POST["fname"];
+$id = intval($_POST["id"]);
+$item = $_POST["item"];
+$value = intval($_POST["value"]);
+$num = intval($_POST["num"]);
+$fname = $_POST["fname"];
+
+// echo $id;
 
 //----------------------------------------------------
 //３．カートへ登録: array([0]=item,[1]=value,[2]=num,[3]=fname);
 //----------------------------------------------------
-$_SESSION["cart"][$*****] = array($***** $*****, $*****, $*****);
+$_SESSION["cart"][$id] = array($item, $value, $num,$fname);
 
 //----------------------------------------------------
 //４．次のページへ移動 cart.php
 //----------------------------------------------------
-header("Location: *****.php");
+
+// var_dump($_SESSION["cart"][$id]);
+
+header("Location: cart.php");
 exit;
 ?>

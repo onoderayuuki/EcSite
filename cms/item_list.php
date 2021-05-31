@@ -1,33 +1,41 @@
 <?php
 //1.  DB接続します
 
-
-
-
+try {
+  $pdo = new PDO('mysql:dbname=docker_db;charset=utf8;host=172.19.0.2','root','root');
+} catch (PDOException $e) {
+  exit('DbConnectError:'.$e->getMessage());
+}
 
 //２．データ登録SQL作成
 
-
-
+$stmt = $pdo->prepare("SELECT * FROM ec_table");
+$status = $stmt->execute();
 
 
 //３．データ表示
-//$view="";
-//if($status==false) {
-//  //execute（SQL実行時にエラーがある場合）
-//  $error = $stmt->errorInfo();
-//  exit("ErrorQuery:".$error[2]);
-//
-//} else {
-//  //Selectデータの数だけ自動でループしてくれる
-//  while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
-//
-//
-//
-//
-//
-//  }
-//}
+$view="";
+if($status==false) {
+ //execute（SQL実行時にエラーがある場合）
+ $error = $stmt->errorInfo();
+ exit("ErrorQuery:".$error[2]);
+
+} else {
+ //Selectデータの数だけ自動でループしてくれる
+ while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
+  // $view .= $result["id"]."==".$result["item"];
+  $view .= '<li class="cart-list">';
+  $view .= '<p class="cart-thumb"><img src="../img/'.$result["fname"].'" alt="#" width="200px" ></p>';
+  $view .= '<h2 class="cart-title">'.$result["item"].'</h2>';
+  $view .= '<p class="cart-price">1,980円</p>';
+  $view .= '<p class="cart-number">1</p>';
+  $view .= '<a href="#" class="btn-update">編集</a>';
+  $view .= '<a href="#" class="btn-delete">削除</a>';
+  $view .= '</li>';
+
+ }
+//  echo $view;
+}
 ?>
 
 <!DOCTYPE html>
@@ -51,30 +59,9 @@
     <div class="wrapper wrapper-main flex-parent">
       <main class="wrapper-main">
         <ul class="cart-products">
-          <li class="cart-list">
-              <p class="cart-thumb"><img src="https://placehold.jp/c9c9c9/ffffff/200x150.png?text=%E3%83%80%E3%83%9F%E3%83%BC%E7%94%BB%E5%83%8F" alt=""></p>
-              <h2 class="cart-title">Items Name</h2>
-              <p class="cart-price">1,980円</p>
-              <p class="cart-number">1</p>
-              <a href="#" class="btn-update">編集</a>
-              <a href="#" class="btn-delete">削除</a>
-          </li>
-          <li class="cart-list">
-              <p class="cart-thumb"><img src="https://placehold.jp/c9c9c9/ffffff/200x150.png?text=%E3%83%80%E3%83%9F%E3%83%BC%E7%94%BB%E5%83%8F" alt=""></p>
-              <h2 class="cart-title">Items Name</h2>
-              <p class="cart-price">1,980円</p>
-              <p class="cart-number">1</p>
-              <a href="#" class="btn-update">編集</a>
-              <a href="#" class="btn-delete">削除</a>
-          </li>
-          <li class="cart-list">
-              <p class="cart-thumb"><img src="https://placehold.jp/c9c9c9/ffffff/200x150.png?text=%E3%83%80%E3%83%9F%E3%83%BC%E7%94%BB%E5%83%8F" alt=""></p>
-              <h2 class="cart-title">Items Name</h2>
-              <p class="cart-price">1,980円</p>
-              <p class="cart-number">1</p>
-              <a href="#" class="btn-update">編集</a>
-              <a href="#" class="btn-delete">削除</a>
-          </li>
+        <?=$view ?>
+          
+          
         </ul>
       </main>
     </div>

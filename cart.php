@@ -1,19 +1,25 @@
 <?php
 session_start();
+// var_dump($_SESSION["cart"]);
+
 //----------------------------------------------------
 //1．SESSIONからカートを取得
 //※カートSESSION: array([0]=item,[1]=value,[2]=num,[3]=fname);
 //----------------------------------------------------
 $view ='';
 //$_SESSION["cart"]のデータを取得
-foreach($_SESSION["*****"] as $key => $value){
+foreach($_SESSION["cart"] as $key => $value){
       $view .='<li class="cart-list">';
-      $view .='<p class="cart-thumb"><img src="./img/'.$value[*****].'" width="200"></p>';
-      $view .='<h2 class="cart-title">'.$value[*****].'</h2>';
-      $view .='<p class="cart-price">'.$value[*****].'</p>';
-      $view .='<p class="cart-number">'.$value[*****].'</p>';
-      $view .='<a href="cartremove.php?id='.$*****.'" class="btn-delete">削除</a>'; //$key
+      $view .='<p class="cart-thumb"><img src="./img/'.$value[3].'" width="200"></p>';
+      $view .='<h2 class="cart-title">'.$value[0].'</h2>';
+      $view .='<p class="cart-price">'.$value[1].'</p>';
+      $view .='<p class="cart-number">'.$value[2].'</p>';
+      $view .='<a href="cartremove.php?id='.$key.'" class="btn-delete">削除</a>'; //$key
       $view .='</li>';
+      // var_dump($key);
+      // var_dump($value);
+      // var_dump($view);
+
 }
 ?>
 
@@ -50,7 +56,7 @@ foreach($_SESSION["*****"] as $key => $value){
         <ul class="cart-products">
         <?php
           //表示
-          echo $**********;
+          echo $view;
         ?>
         </ul>
         <ul class="btn-list">
