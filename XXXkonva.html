@@ -7,7 +7,7 @@
       rel="stylesheet"
       href="https://cdn.quilljs.com/1.3.6/quill.snow.css"
     />
-
+    <link rel="stylesheet" href="style.css">
     <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
     <meta charset="utf-8" />
     <title>Konva Rich text on Canvas Demo</title>
@@ -33,17 +33,26 @@
         くれなゐの二尺伸びたる薔薇の芽の針やはらかに春雨のふる
       </span>
     </div>
-    
-    <button id="button">表示</button>
+
     <div id="container"></div>
-      <form action="editsave.php" method="POST">
-        <!-- <input type="submit" class="" value="表示" /> -->
-      </form>
-      <script>
-          // quill:editor
-          var quill = new Quill("#editor-container", {
-              modules: {
-                  toolbar: [
+    <button id="button">Save</button>
+    <form action="edit_add.php" method="POST" name="saveForm">
+      <p>
+        imageX<input type="number" id="text_x" name="text_x" value="" />
+        imageY<input type="number" id="text_y" name="text_y" value="" />
+      </p>
+      <p>
+        text_json<input type="json" id="text_json" name="text_json" value="" />
+      </p>
+      <p><input type="textarea" id="image_src" name="image_src" value="" /></p>
+      <!-- <input type="submit" class="" value="表示" /> -->
+    </form>
+
+    <script>
+      // quill:editor
+      var quill = new Quill("#editor-container", {
+        modules: {
+          toolbar: [
             [{ header: [1, 2, false] }],
             [{ font: [] }],
             ["bold", "italic", "underline"],
@@ -57,8 +66,8 @@
       });
 
       //Konva:canvas
-    //   const WIDTH = window.innerWidth;
-    //   const HEIGHT = window.innerHeight;
+      //   const WIDTH = window.innerWidth;
+      //   const HEIGHT = window.innerHeight;
       const stage = new Konva.Stage({
         container: "container",
         width: 707,
@@ -75,6 +84,11 @@
         // stroke: "red",
         scaleX: 1 / window.devicePixelRatio,
         scaleY: 1 / window.devicePixelRatio,
+      });
+      const BACK_IMAGE = new Konva.Image({
+        //   image: images.back,
+        x: 0,
+        y: 0,
       });
 
       //Back_Image
@@ -97,11 +111,8 @@
       }
 
       function buildStage(images) {
-        const BACK_IMAGE = new Konva.Image({
-          image: images.back,
-          x: 0,
-          y: 0,
-        });
+        BACK_IMAGE.setAttr("image", images.back);
+        // console.log(BACK_IMAGE);
         layer.add(BACK_IMAGE);
         layer.add(TEXT_IMAGE);
       }
@@ -124,6 +135,21 @@
         });
       }
 
+      function updateForm() {
+        return new Promise(function (resolve) {
+        //   setTimeout(() => {
+            // document.querySelector("#text_x").value =
+              // TEXT_IMAGE.getAttrs()["x"];
+            document.querySelector("#text_y").value =
+              TEXT_IMAGE.getAttrs()["y"];
+            document.querySelector("#text_json").value =
+              BACK_IMAGE.getAttrs()["image"].src;
+            document.querySelector("#image_src").value = JSON.stringify(
+              quill.getContents()
+            );
+        //   }, 5000);
+        });
+      }
       // batch updates, so we don't render text too frequently
       var timeout = null;
       function requestTextUpdate() {
@@ -133,18 +159,39 @@
         timeout = setTimeout(function () {
           timeout = null;
           renderText();
-        }, 500);
+        }, 100);
       }
 
       // render text on all changes
       quill.on("text-change", requestTextUpdate);
       // make initial rendering
       renderText();
+      // updateForm();
 
       //for debug
-      document.getElementById("button").onclick =  ()=> {
-            // console.log(TEXT_IMAGE.getAttrs()["x"]);
-            console.log(BACK_IMAGE.getsrc());
+      document.getElementById("button").onclick = async () => {
+        // await updateForm();
+        // console.log("OK");
+        // document.saveForm.submit();
+        (async () => {
+        const updateForm = new Promise(function(resolve) {
+          // setTimeout(() => {
+          document.querySelector("#text_x").value =
+            TEXT_IMAGE.getAttrs()["x"];
+          document.querySelector("#text_y").value =
+            TEXT_IMAGE.getAttrs()["y"];
+          document.querySelector("#image_src").value =
+            BACK_IMAGE.getAttrs()["image"].src;
+          document.querySelector("#text_json").value = JSON.stringify(quill.getContents());
+          // document.querySelector("#text_json").value = quill.root.innerHTML;
+          console.log('5000');
+          resolve();
+          // }, 5000);
+        });
+        await updateForm;
+        document.saveForm.submit();
+        
+      })();
       };
     </script>
   </body>
