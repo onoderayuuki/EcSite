@@ -34,7 +34,7 @@ div{
 <form method="post" action="login_act.php">
    <fieldset>
      <label>ID  ：<input type="text" name="lid"></label><br>
-     <label>PW：<input type="text" name="lpw"></label><br>
+     <label>PW：<input type="password" name="lpw"></label><br>
      <input type="submit" value="ログイン">
     </fieldset>
 </form>

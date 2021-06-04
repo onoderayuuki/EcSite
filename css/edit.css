@@ -1,16 +1,44 @@
-body {
-    margin: 0;
-    padding: 0;
-    overflow: hidden;
-    background-color: #f0f0f0;
-  }
 
-  #editor-container {
-    height: 80px;
-    width: 500px;
-    background-color:goldenrod;
-  }
-   
+  
   form{
     display:none;
+  }
+  .container{
+    display: flex;
+    justify-content: center;
+    margin:20px 0;
+  }
+  .image-wrapper {
+    margin:20px 0;
+    text-align: center;
+  }
+  .caption{
+    font-size: 14px;
+    text-align: right;
+    margin: 0 40px;
+  }
+  .editor-wrapper{
+    /* 自分の中央揃え */
+    margin:20px auto;
+    height:100px;
+    width:500px;
+    /* 子供の中央揃え */
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    /* リサイズ */
+    overflow   : auto;
+    resize: both;
+
+  }
+  .editor-container {
+    /* height: 80px; */
+    /* width: 500px; */
+    background-color:rgba(0,0,0,0.2);
+  }
+   
+  .button-wrapper{
+    margin:20px auto;
+    width:700px;
+    text-align: right;
   }

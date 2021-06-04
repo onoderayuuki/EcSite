@@ -4,13 +4,15 @@ $lid = $_POST["lid"];
 $lpw = $_POST["lpw"];
 $sid = session_id();
 
+// var_dump($_POST);
+
 try {
   $pdo = new PDO('mysql:dbname=Editing;host=localhost;charset=utf8', 'root', 'root');
 } catch (PDOException $e) {
   exit('DbConnectError:'.$e->getMessage());
 }
 
-$sql = "SELECT * FROM editor WHERE editor_id=:lid AND editor_password=:lpw AND editor_isLive =1";
+$sql = "SELECT * FROM editor WHERE editorID=:lid AND editorPassword=:lpw AND editorIsLive =1";
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(':lid', $lid);
 $stmt->bindValue(':lpw', $lpw);
@@ -24,11 +26,13 @@ if($res==false){
 
 $val = $stmt->fetch(); //1レコードだけ取得する方法
 
-if( $val["editor_id"] != "" ){
+if( $val["editorID"] != "" ){
   $_SESSION["chk_ssid"]  = session_id();
-  $_SESSION["name"]       = $val['name'];
+  $_SESSION["editorID"]  = $val["editorID"];
+  $_SESSION["editorName"] = $val['editorName'];
   header("Location: edit_list.php");
 }else{
+
   header("Location: login.php");
   
 }

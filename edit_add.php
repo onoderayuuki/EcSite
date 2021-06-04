@@ -1,5 +1,8 @@
 <?php
 
+session_start();
+include("funcs.php");
+loginCheck();
 
 //----------------------------------------------------
 //１．入力チェック(受信確認処理追加)
@@ -12,13 +15,18 @@
 //----------------------------------------------------
 //２. POSTデータ取得
 //----------------------------------------------------
+$cardID  = $_POST["cardID"];
+if ($cardID == 0) {
+  $cardID = NULL;
+}
 
-$textX  = $_POST["text_x"];
-$textY  = $_POST["text_y"];
-$imageSrc = $_POST["image_src"];
-$textJSON = $_POST["text_json"];
-
-var_dump($_POST) ;
+$textX  = $_POST["textX"];
+$textY  = $_POST["textY"];
+$imageSrc = $_POST["imageSrc"];
+$textJSON = $_POST["textJSON"];
+$imageBase64 = $_POST["imageBase64"];
+$editorID = $_SESSION["editorId"];
+// var_dump($_POST) ;
 
 // //----------------------------------------------------
 // //３. DB接続します(エラー処理追加)
@@ -29,16 +37,28 @@ try {
   exit('DbConnectError:'.$e->getMessage());
 }
 
+//Insert or Update判定
+
 // //----------------------------------------------------
 // //４．データ登録SQL作成
 // //----------------------------------------------------
-$sql = "INSERT INTO cards(cardID, textX, textY, textJSON, imageSrc, editorID, addDate)
-VALUES(NULL, :textX, :textY, :textJSON, :imageSrc, '1' , sysdate())";
+
+$sql = "INSERT INTO cards(cardID, textX, textY, textJSON, imageSrc,imageBase64 ,editorID, addDate)
+                            VALUES($cardID, :textX, :textY, :textJSON, :imageSrc,:imageBase64, :editorID , sysdate())
+ON DUPLICATE KEY UPDATE textX=VALUES(textX)
+                                            ,textY=VALUES(textY)
+                                            ,textJSON=VALUES(textJSON)
+                                            ,imageSrc=VALUES(imageSrc)
+                                            ,imageBase64=VALUES(imageBase64)
+                            ";
+
 $stmt = $pdo->prepare($sql);
 $stmt->bindValue(':textX', $textX, PDO::PARAM_INT);
 $stmt->bindValue(':textY', $textY, PDO::PARAM_INT); 
 $stmt->bindValue(':textJSON', $textJSON);
 $stmt->bindValue(':imageSrc', $imageSrc);
+$stmt->bindValue(':imageBase64', $imageBase64);
+$stmt->bindValue(':editorID', $editorID);
 $status = $stmt->execute();
 
 // //----------------------------------------------------
@@ -50,8 +70,8 @@ if($status==false){
  var_dump($error);
 //   exit("QueryError:".$error[2]);
 }else{
-    echo 'ok';
-//   header("Location: item.php");
+    // echo 'ok';
+  header("Location: edit_list.php");
 //   exit;
 }
  ?>
