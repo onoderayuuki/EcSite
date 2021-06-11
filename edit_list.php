@@ -3,6 +3,7 @@ session_start();
 include("funcs.php");
 loginCheck();
 
+
 try {
   $pdo = new PDO('mysql:dbname=Editing;host=localhost;charset=utf8', 'root', 'root');
 } catch (PDOException $e) {
@@ -14,21 +15,17 @@ $status = $stmt->execute();
 
 $view="";
 if($status==false) {
-  //execute（SQL実行時にエラーがある場合）
   $error = $stmt->errorInfo();
   exit("ErrorQuery:".$error[2]);
 
 } else {
-  //Selectデータの数だけ自動でループしてくれる
   while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
     if ($result["editorID"]=$_SESSION["editorID"]) {
       $view .= '<a href="edit.php?id='.$result["cardID"].'"><img src="'.$result["imageBase64"].'" width="200" /></a>';
     } else {
       $view .= '<a href="card.php?id='.$result["cardID"].'"><img src="'.$result["imageBase64"].'" width="200" /></a>';
     }
-    var_dump($result["editorID"]);
   }
-  // var_dump($_SESSION);
 }
 ?>
 <!DOCTYPE html>
@@ -71,7 +68,7 @@ if($status==false) {
         <a id="plus-area" href="edit.php?id=0">＋</a>
 
         <?php echo $view; ?>
-          <a href="#"><img src="./images/sample1.jpg"  /></a>
+          <!-- <a href="#"><img src="./images/sample1.jpg"  /></a>
           <a href="#"><img src="./images/sample2.jpg"  /></a>
           <a href="#"><img src="./images/sample3.jpg" /></a>
           <a href="#"><img src="./images/sample4.jpg"  /></a>
@@ -85,24 +82,19 @@ if($status==false) {
           <a href="#"><img src="./images/sample2.jpg"  /></a>
           <a href="#"><img src="./images/sample3.jpg" /></a>
           <a href="#"><img src="./images/sample4.jpg"  /></a>
-          <a href="#"><img src="./images/sample5.jpg" /></a>
+          <a href="#"><img src="./images/sample5.jpg" /></a> -->
         </div>
-        <!--end 商品リスト-->
-        <!--ページャー-->
+        <!-- end 商品リスト-->
+        <!-- ページャー -->
         <div>
         <ul class="pager clearfix">
           <li class="pager-item"><a href="#">1</a></li>
           <li class="pager-item"><a href="#">2</a></li>
         </ul>
       </div>
-        <!--end ページャー-->
+        <!-- end ページャー-->
       </main>
     </div>
-    <!--footer-->
-    <!-- <footer class="footer">
-    <p class="copyrights"><small>Copyrights G’s Academy Tokyo All Rights Reserved.</small></p>
-  </footer> -->
-    <!--end footer-->
 
     <script src="http://code.jquery.com/jquery-3.0.0.js"></script>
     <script src="js/jquery.bxslider.min.js"></script>

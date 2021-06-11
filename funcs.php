@@ -7,6 +7,7 @@ function loginCheck(){
   if (!isset($_SESSION["chk_ssid"]) ||$_SESSION["chk_ssid"] != session_id()
   ) {
     echo "LOGIN ERROR";
+    echo '<a href="./login.php">Login</a>';
     exit();
   }else{
     session_regenerate_id(true);
@@ -14,6 +15,7 @@ function loginCheck(){
   }
   
 }
+
 
 
 ?>

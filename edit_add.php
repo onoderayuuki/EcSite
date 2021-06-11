@@ -10,14 +10,13 @@ loginCheck();
 // if(!isset($_POST["text_x"]) || $_POST["text_x"] == ""){
 //   exit("x_error");
 // }
-
 // check("text_x");
 //----------------------------------------------------
 //２. POSTデータ取得
 //----------------------------------------------------
 $cardID  = $_POST["cardID"];
 if ($cardID == 0) {
-  $cardID = NULL;
+  $cardID = 'NULL';
 }
 
 $textX  = $_POST["textX"];
@@ -26,25 +25,29 @@ $imageSrc = $_POST["imageSrc"];
 $textJSON = $_POST["textJSON"];
 $imageBase64 = $_POST["imageBase64"];
 $editorID = $_SESSION["editorId"];
-// var_dump($_POST) ;
 
 // //----------------------------------------------------
 // //３. DB接続します(エラー処理追加)
 // //----------------------------------------------------
 try {
-    $pdo = new PDO('mysql:dbname=Editing;host=localhost;charset=utf8','root', 'root');
+  $pdo = new PDO('mysql:dbname=Editing;host=localhost;charset=utf8','root', 'root');
 } catch (PDOException $e) {
   exit('DbConnectError:'.$e->getMessage());
 }
 
-//Insert or Update判定
-
 // //----------------------------------------------------
 // //４．データ登録SQL作成
 // //----------------------------------------------------
-
 $sql = "INSERT INTO cards(cardID, textX, textY, textJSON, imageSrc,imageBase64 ,editorID, addDate)
-                            VALUES($cardID, :textX, :textY, :textJSON, :imageSrc,:imageBase64, :editorID , sysdate())
+                            VALUES($cardID
+                            , :textX
+                            , :textY
+                            , :textJSON
+                            , :imageSrc
+                            ,:imageBase64
+                            , :editorID
+                            , sysdate()
+                            )
 ON DUPLICATE KEY UPDATE textX=VALUES(textX)
                                             ,textY=VALUES(textY)
                                             ,textJSON=VALUES(textJSON)
@@ -66,8 +69,12 @@ $status = $stmt->execute();
 // //----------------------------------------------------
 if($status==false){
   $error = $stmt->errorInfo();
-  echo '<br>';
- var_dump($error);
+  echo '<pre>';
+  var_dump($error);
+  echo '</pre>';
+  echo '<pre>';
+  var_dump($sql);
+  echo '</pre>';
 //   exit("QueryError:".$error[2]);
 }else{
     // echo 'ok';

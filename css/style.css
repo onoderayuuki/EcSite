@@ -182,7 +182,11 @@ display: inline-block;
   border: 3px solid rgb(255, 255, 255);
   border-radius: 5%;
 }
-
+.images_box {
+  display: flex;
+  justify-content: space-around;
+  /* align-items: center; */
+}
 /*----------------
  * common footer
  *-----------------*/
