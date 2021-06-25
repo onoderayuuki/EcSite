@@ -3,15 +3,44 @@ session_start();
 include("funcs.php");
 loginCheck();
 
+$editorID = intval($_SESSION["editorID"]);
 
+//GET判定_type
+if (!isset($_GET["type"]) || $_GET["type"] == "") {
+  $type="all";
+} else {
+  $type = $_GET["type"];
+}
+
+if (!isset($_GET["order"]) || $_GET["order"] == "") {
+  $order="desc";
+} else {
+  $order = $_GET["order"];
+}
+
+
+//接続準備
 try {
   $pdo = new PDO('mysql:dbname=Editing;host=localhost;charset=utf8', 'root', 'root');
 } catch (PDOException $e) {
   exit('DbConnectError:'.$e->getMessage());
 }
 
-$stmt = $pdo->prepare("SELECT cardID,editorID,imageBase64 FROM cards WHERE cardID > 0");
-$status = $stmt->execute();
+//SQL用意
+if($type==="myedits"){
+  $sql = "SELECT cardID,IFNULL(editorID,0) as editorID,imageBase64 FROM cards WHERE cardID > 0 and IFNULL(editorID,0)=:editorID ORDER BY addDate ";
+  $sql  .= $order;
+  $stmt = $pdo->prepare($sql);
+  $stmt->bindValue(':editorID', $editorID, PDO::PARAM_INT);
+  $status = $stmt->execute();
+  // }elseif($type==="favorit"){  
+}else{
+  $sql = "SELECT cardID,IFNULL(editorID,0) as editorID,imageBase64 FROM cards WHERE cardID > 0 ORDER BY addDate ";
+  $sql  .= $order;
+  // $stmt = $pdo->prepare("SELECT cardID,IFNULL(editorID,0) as editorID,imageBase64 FROM cards WHERE cardID > 0 ");
+  $stmt = $pdo->prepare($sql);
+  $status = $stmt->execute();
+}
 
 $view="";
 if($status==false) {
@@ -20,7 +49,7 @@ if($status==false) {
 
 } else {
   while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
-    if ($result["editorID"]=$_SESSION["editorID"]) {
+    if ($result["editorID"]===$editorID) {
       $view .= '<a href="edit.php?id='.$result["cardID"].'"><img src="'.$result["imageBase64"].'" width="200" /></a>';
     } else {
       $view .= '<a href="card.php?id='.$result["cardID"].'"><img src="'.$result["imageBase64"].'" width="200" /></a>';
@@ -48,7 +77,7 @@ if($status==false) {
         </div>
       </form>
       <!--end form-->
-      <a href="edit_list.php">⚪︎myEdits</a>
+      <a href="./edit_list.php?type=myedits&order=desc">⚪︎myEdits</a>
       <a href="logout.php">Logout</a>
       
     </header>
@@ -57,8 +86,8 @@ if($status==false) {
         <!--並び替えボタン-->
         <div class="sort-area">
           <ul class="sort-list flex-parent">
-            <li class="sort-item"><a href="#"> ▼ addDate</a></li>
-            <li class="sort-item"><a href="#"> △ addDate</a></li>
+            <li class="sort-item"><a href="./edit_list.php?type=<?=$type?>&order=desc"> ▼ addDate</a></li>
+            <li class="sort-item"><a href="./edit_list.php?type=<?=$type?>&order=asc"> △ addDate</a></li>
             <!-- <li class="sort-item"><a href="#">▼ favoritDate</a></li> -->
           </ul>
         </div>
@@ -68,21 +97,6 @@ if($status==false) {
         <a id="plus-area" href="edit.php?id=0">＋</a>
 
         <?php echo $view; ?>
-          <!-- <a href="#"><img src="./images/sample1.jpg"  /></a>
-          <a href="#"><img src="./images/sample2.jpg"  /></a>
-          <a href="#"><img src="./images/sample3.jpg" /></a>
-          <a href="#"><img src="./images/sample4.jpg"  /></a>
-          <a href="#"><img src="./images/sample5.jpg" /></a>
-          <a href="#"><img src="./images/sample5.jpg"  /></a>
-          <a href="#"><img src="./images/sample4.jpg"  /></a>
-          <a href="#"><img src="./images/sample3.jpg" /></a>
-          <a href="#"><img src="./images/sample2.jpg"  /></a>
-          <a href="#"><img src="./images/sample1.jpg" /></a>
-          <a href="#"><img src="./images/sample1.jpg"  /></a>
-          <a href="#"><img src="./images/sample2.jpg"  /></a>
-          <a href="#"><img src="./images/sample3.jpg" /></a>
-          <a href="#"><img src="./images/sample4.jpg"  /></a>
-          <a href="#"><img src="./images/sample5.jpg" /></a> -->
         </div>
         <!-- end 商品リスト-->
         <!-- ページャー -->

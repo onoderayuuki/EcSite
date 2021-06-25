@@ -24,8 +24,8 @@ $textY  = $_POST["textY"];
 $imageSrc = $_POST["imageSrc"];
 $textJSON = $_POST["textJSON"];
 $imageBase64 = $_POST["imageBase64"];
-$editorID = $_SESSION["editorId"];
-
+$editorID = intval($_SESSION["editorID"]);
+var_dump($editorID);
 // //----------------------------------------------------
 // //３. DB接続します(エラー処理追加)
 // //----------------------------------------------------
@@ -44,7 +44,7 @@ $sql = "INSERT INTO cards(cardID, textX, textY, textJSON, imageSrc,imageBase64 ,
                             , :textY
                             , :textJSON
                             , :imageSrc
-                            ,:imageBase64
+                            , :imageBase64
                             , :editorID
                             , sysdate()
                             )
@@ -61,7 +61,7 @@ $stmt->bindValue(':textY', $textY, PDO::PARAM_INT);
 $stmt->bindValue(':textJSON', $textJSON);
 $stmt->bindValue(':imageSrc', $imageSrc);
 $stmt->bindValue(':imageBase64', $imageBase64);
-$stmt->bindValue(':editorID', $editorID);
+$stmt->bindValue(':editorID', $editorID, PDO::PARAM_INT);
 $status = $stmt->execute();
 
 // //----------------------------------------------------
