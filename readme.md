@@ -32,3 +32,9 @@
 - Konva.js：Canvas編集ライブラリ：https://konvajs.org/ 
 - html2canvas ：htmlをcanvasに反映できる：https://html2canvas.hertzen.com/
 - Unsplash API：無料の写真API：https://unsplash.com/
+
+# PHP2
+## 0626変更点
+ - 表示の際にログインユーザーにかかわらず全てのカードを修正できていた障害を修正。
+ - 一覧画面上のaddDateの昇順降順をGETのorder値からSQLに追記させることで最小限の記述で並べ替えを実装
+ - myEditsページに関しても上記と同様の手法でページ追加せず実装
