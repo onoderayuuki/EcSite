@@ -20,11 +20,13 @@ if (!isset($_GET["order"]) || $_GET["order"] == "") {
 
 
 //接続準備
-try {
-  $pdo = new PDO('mysql:dbname=Editing;host=localhost;charset=utf8', 'root', 'root');
-} catch (PDOException $e) {
-  exit('DbConnectError:'.$e->getMessage());
-}
+// try {
+//   $pdo = new PDO('mysql:dbname=Editing;host=localhost;charset=utf8', 'root', 'root');
+// } catch (PDOException $e) {
+//   exit('DbConnectError:'.$e->getMessage());
+// }
+
+$pdo = createPDO();
 
 //SQL用意
 if($type==="myedits"){
@@ -49,7 +51,7 @@ if($status==false) {
 
 } else {
   while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
-    if ($result["editorID"]===$editorID) {
+    if ($result["editorID"]==$editorID) {
       $view .= '<a href="edit.php?id='.$result["cardID"].'"><img src="'.$result["imageBase64"].'" width="200" /></a>';
     } else {
       $view .= '<a href="card.php?id='.$result["cardID"].'"><img src="'.$result["imageBase64"].'" width="200" /></a>';

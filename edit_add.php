@@ -29,11 +29,12 @@ var_dump($editorID);
 // //----------------------------------------------------
 // //３. DB接続します(エラー処理追加)
 // //----------------------------------------------------
-try {
-  $pdo = new PDO('mysql:dbname=Editing;host=localhost;charset=utf8','root', 'root');
-} catch (PDOException $e) {
-  exit('DbConnectError:'.$e->getMessage());
-}
+// try {
+//   $pdo = new PDO('mysql:dbname=Editing;host=localhost;charset=utf8','root', 'root');
+// } catch (PDOException $e) {
+//   exit('DbConnectError:'.$e->getMessage());
+// }
+$pdo = createPDO();
 
 // //----------------------------------------------------
 // //４．データ登録SQL作成

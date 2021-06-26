@@ -10,11 +10,13 @@ if (!isset($_GET["id"]) || $_GET["id"] == "") {
   $id = intval($_GET["id"]);
 }
 
-try {
-  $pdo = new PDO('mysql:dbname=Editing;host=localhost;charset=utf8', 'root', 'root');
-} catch (PDOException $e) {
-  exit('DbConnectError:' . $e->getMessage());
-}
+// try {
+//   $pdo = new PDO('mysql:dbname=Editing;host=localhost;charset=utf8', 'root', 'root');
+// } catch (PDOException $e) {
+//   exit('DbConnectError:' . $e->getMessage());
+// }
+$pdo = createPDO();
+
 
 $stmt = $pdo->prepare("SELECT * FROM cards WHERE cardID=:id");
 $stmt->bindValue(':id', $id, PDO::PARAM_INT);
