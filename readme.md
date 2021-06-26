@@ -1,4 +1,7 @@
 # PHP1
+
+https://discegaudere.sakura.ne.jp/Moonlight
+
 ![image](https://user-images.githubusercontent.com/38471145/121733006-e328c980-cb2d-11eb-98b8-b18ae6aa769f.png)
 ![image](https://user-images.githubusercontent.com/38471145/121733058-f5a30300-cb2d-11eb-875a-44af424c3e6a.png)
 ![image](https://user-images.githubusercontent.com/38471145/121733143-13706800-cb2e-11eb-928c-2f9084a5fe39.png)
@@ -41,3 +44,4 @@
  - デプロイに備えてDB環境変数を.envに外部ファイル化
  - dotenvを追加してPDO作成を共通関数に   
  - DBのエクスポート （SQL／moonlight .sq）
+ - さくらレンタルサーバーにて公開（index.htmlの設定） https://discegaudere.sakura.ne.jp/Moonlight
