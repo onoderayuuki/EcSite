@@ -18,26 +18,51 @@ if (!isset($_GET["order"]) || $_GET["order"] == "") {
   $order = $_GET["order"];
 }
 
-
-//接続準備
-// try {
-//   $pdo = new PDO('mysql:dbname=Editing;host=localhost;charset=utf8', 'root', 'root');
-// } catch (PDOException $e) {
-//   exit('DbConnectError:'.$e->getMessage());
-// }
-
 $pdo = createPDO();
 
 //SQL用意
 if($type==="myedits"){
-  $sql = "SELECT cardID,IFNULL(editorID,0) as editorID,imageBase64 FROM cards WHERE cardID > 0 and IFNULL(editorID,0)=:editorID ORDER BY addDate ";
+  $sql = "SELECT 
+      cards.cardID
+      ,IFNULL(cards.editorID,0)
+      ,imageBase64
+      ,SUM(IFNULL(favorit,0)) as favorit
+    FROM cards 
+    LEFT JOIN favorits ON cards.cardID=favorits.cardID
+    WHERE cards.isLive=1 and cards.cardID > 0 and IFNULL(cards.editorID,0)=:editorID 
+    GROUP BY cards.cardID,IFNULL(cards.editorID,0),imageBase64
+    ORDER BY addDate ";
   $sql  .= $order;
   $stmt = $pdo->prepare($sql);
   $stmt->bindValue(':editorID', $editorID, PDO::PARAM_INT);
   $status = $stmt->execute();
   // }elseif($type==="favorit"){  
-}else{
-  $sql = "SELECT cardID,IFNULL(editorID,0) as editorID,imageBase64 FROM cards WHERE cardID > 0 ORDER BY addDate ";
+} else if($type==="myfavorits") {
+  $sql = "SELECT 
+  cards.cardID
+  ,IFNULL(cards.editorID,0)
+  ,imageBase64
+  ,SUM(IFNULL(favorit,0)) as favorit
+FROM cards 
+LEFT JOIN favorits ON cards.cardID=favorits.cardID
+WHERE cards.isLive=1 and cards.cardID > 0 and favorits.editorID = :editorID 
+GROUP BY cards.cardID,IFNULL(cards.editorID,0),imageBase64
+ORDER BY addDate ";
+  $sql  .= $order;
+  $stmt = $pdo->prepare($sql);
+  $stmt->bindValue(':editorID', $editorID, PDO::PARAM_INT);
+  $status = $stmt->execute();
+} else {
+  $sql = "SELECT 
+  cards.cardID
+  ,IFNULL(cards.editorID,0)
+  ,imageBase64
+  ,SUM(IFNULL(favorit,0)) as favorit
+FROM cards 
+LEFT JOIN favorits ON cards.cardID=favorits.cardID
+WHERE cards.isLive=1 and cards.cardID > 0
+GROUP BY cards.cardID,IFNULL(cards.editorID,0),imageBase64
+ORDER BY addDate ";
   $sql  .= $order;
   // $stmt = $pdo->prepare("SELECT cardID,IFNULL(editorID,0) as editorID,imageBase64 FROM cards WHERE cardID > 0 ");
   $stmt = $pdo->prepare($sql);
@@ -51,11 +76,27 @@ if($status==false) {
 
 } else {
   while( $result = $stmt->fetch(PDO::FETCH_ASSOC)){
+
+    if($result["favorit"] == 0){
+      $favorit = '🌑';
+    }else if($result["favorit"] ==1){
+      $favorit = '🌘';
+    }else if($result["favorit"] == 2){
+      $favorit = '🌗';
+    }else if($result["favorit"] == 3){
+      $favorit = '🌖';
+    }else{
+      $favorit = '🌕';
+    }
+
+    $view .='<div class="cardContainer">';
     if ($result["editorID"]==$editorID) {
       $view .= '<a href="edit.php?id='.$result["cardID"].'"><img src="'.$result["imageBase64"].'" width="200" /></a>';
     } else {
       $view .= '<a href="card.php?id='.$result["cardID"].'"><img src="'.$result["imageBase64"].'" width="200" /></a>';
     }
+    $view .= '<a href="favorit.php?cardID='.$result["cardID"].'" class="favoritMoon">'.$favorit.'</a>';
+    $view .= '</div>';
   }
 }
 ?>
@@ -70,14 +111,14 @@ if($status==false) {
   <body>
     <header class="header">
       <h1 class="site-title"><a href="edit_list.php">Moonlight 🌒</a></h1>
-      <a href="edit_list.php">⚫︎favorit</a>
+      <a href="./edit_list.php?type=myfavorits&order=desc">⚫︎favorit</a>
       <!--form-->
-      <form action="" method="get" class="search-form">
+      <!-- <form action="" method="get" class="search-form">
         <div>
           <input type="text" placeholder="Serch" class="search-box" />
           <input type="submit" value="送信" class="search-submit" />
         </div>
-      </form>
+      </form> -->
       <!--end form-->
       <a href="./edit_list.php?type=myedits&order=desc">⚪︎myEdits</a>
       <a href="logout.php">Logout</a>
@@ -96,9 +137,8 @@ if($status==false) {
         <!--end 並び替えボタン-->
         <!--商品リスト-->
         <div class="cards_list">
-        <a id="plus-area" href="edit.php?id=0">＋</a>
-
-        <?php echo $view; ?>
+            <a id="plus-area" href="edit.php?id=0">＋</a>
+          <?php echo $view; ?>
         </div>
         <!-- end 商品リスト-->
         <!-- ページャー -->

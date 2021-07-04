@@ -122,6 +122,7 @@ $photos_json = json_encode($photos);
     <div id="container" class="container"></div>
     <!-- 保存と送信 -->
     <div class="button-wrapper">
+      <button id="delete" onclick="location.href='edit_delete.php?cardID=<?=$id?>'"'>🗑delete</button>
       <button id="download">download</button>
       <button id="save">Save</button>
     </div>
@@ -295,6 +296,7 @@ $photos_json = json_encode($photos);
       false
     );
 
+    
   const trigger = document.querySelectorAll(".imgbox");
   trigger.forEach(function(target) {
     target.addEventListener('click', function() {
