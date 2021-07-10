@@ -45,3 +45,11 @@ https://discegaudere.sakura.ne.jp/Moonlight
  - dotenvを追加してPDO作成を共通関数に   
  - DBのエクスポート （SQL／moonlight .sq）
  - さくらレンタルサーバーにて公開（index.htmlの設定） https://discegaudere.sakura.ne.jp/Moonlight
+
+# PHP3
+## 0703,4変更点
+### favorit関連機能の追加
+- myfavoritからfavoritしたもののみの一覧が表示されるように
+    - favoritテーブルを別にして登録リストとしてかつ集計ソースとして使えるようにしたこと（正規化）が個人的ポイント
+- favorit数に連動して月が満ちるような表示
+    - いいねの数と上手に付き合う方法を考えた

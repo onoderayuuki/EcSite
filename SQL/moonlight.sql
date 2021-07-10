@@ -31,7 +31,7 @@ CREATE TABLE `cards` (
   `addDate` datetime DEFAULT NULL,
   `isLive` tinyint(1) NOT NULL DEFAULT '1'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-
+ 
 --
 -- Dumping data for table `cards`
 --

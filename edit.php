@@ -92,11 +92,11 @@ $photos_json = json_encode($photos);
 <head>
   <script src="https://unpkg.com/konva@8.0.2/konva.min.js"></script>
   <script src="https://cdn.quilljs.com/1.3.6/quill.js"></script>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <link rel="stylesheet" href="https://cdn.quilljs.com/1.3.6/quill.snow.css" />
   <link rel="stylesheet" href="./css/reset.css">
   <link rel="stylesheet" href="./css/style.css" />
   <link rel="stylesheet" href="./css/edit.css">
-  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
   <meta charset="utf-8" />
   <title>yourEdit</title>
 
